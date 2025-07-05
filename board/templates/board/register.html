@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Register - Anonymous Confession Board</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .register-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+            width: 100%;
+            max-width: 450px;
+            animation: slideInUp 0.6s ease;
+        }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .register-header {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .register-header h1 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .register-header p {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        .register-form {
+            padding: 40px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-family: inherit;
+            transition: all 0.3s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #4CAF50;
+            box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .register-btn {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-top: 10px;
+            min-height: 44px; /* Touch-friendly minimum size */
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .register-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(76, 175, 80, 0.4);
+        }
+
+        .register-btn:active {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.4);
+        }
+
+        .error-message {
+            background: #ff6b6b;
+            color: white;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .success-message {
+            background: #4CAF50;
+            color: white;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .login-link {
+            text-align: center;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+
+        .login-link a {
+            color: #4CAF50;
+            text-decoration: none;
+            font-weight: 600;
+            padding: 8px 16px;
+            border: 2px solid #4CAF50;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+
+        .login-link a:hover {
+            background: #4CAF50;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .floating-hearts {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .heart {
+            position: absolute;
+            color: rgba(76, 175, 80, 0.3);
+            font-size: 20px;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+        }
+
+        .heart:nth-child(1) { left: 10%; animation-delay: 0s; }
+        .heart:nth-child(2) { left: 20%; animation-delay: 1s; }
+        .heart:nth-child(3) { left: 30%; animation-delay: 2s; }
+        .heart:nth-child(4) { left: 40%; animation-delay: 3s; }
+        .heart:nth-child(5) { left: 50%; animation-delay: 4s; }
+        .heart:nth-child(6) { left: 60%; animation-delay: 5s; }
+        .heart:nth-child(7) { left: 70%; animation-delay: 1.5s; }
+        .heart:nth-child(8) { left: 80%; animation-delay: 2.5s; }
+        .heart:nth-child(9) { left: 90%; animation-delay: 3.5s; }
+
+        .features {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+            border-left: 4px solid #4CAF50;
+        }
+
+        .features h4 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 1rem;
+        }
+
+        .features ul {
+            color: #666;
+            font-size: 0.9rem;
+            margin-left: 20px;
+        }
+
+        .features li {
+            margin-bottom: 5px;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            
+            .register-container {
+                margin: 0;
+                border-radius: 15px;
+                max-width: 100%;
+            }
+            
+            .register-header {
+                padding: 25px 20px;
+            }
+            
+            .register-header h1 {
+                font-size: 1.8rem;
+                line-height: 1.2;
+            }
+            
+            .register-header p {
+                font-size: 0.95rem;
+            }
+            
+            .register-form {
+                padding: 30px 20px;
+            }
+            
+            .form-input {
+                padding: 12px;
+                font-size: 1rem;
+            }
+            
+            .register-btn {
+                padding: 12px;
+                font-size: 1rem;
+            }
+            
+            .features {
+                padding: 12px;
+            }
+            
+            .features h4 {
+                font-size: 0.95rem;
+            }
+            
+            .features ul {
+                font-size: 0.85rem;
+            }
+            
+            .login-link {
+                margin-top: 15px;
+                padding-top: 15px;
+            }
+            
+            .login-link a {
+                padding: 8px 16px;
+                font-size: 0.9rem;
+            }
+        }
+
+        /* Extra small devices (phones, 480px and down) */
+        @media (max-width: 480px) {
+            body {
+                padding: 5px;
+            }
+            
+            .register-header {
+                padding: 20px 15px;
+            }
+            
+            .register-header h1 {
+                font-size: 1.6rem;
+            }
+            
+            .register-header p {
+                font-size: 0.9rem;
+            }
+            
+            .register-form {
+                padding: 25px 15px;
+            }
+            
+            .form-input {
+                padding: 10px;
+                font-size: 0.95rem;
+            }
+            
+            .register-btn {
+                padding: 10px;
+                font-size: 0.95rem;
+            }
+            
+            .features {
+                padding: 10px;
+            }
+            
+            .features h4 {
+                font-size: 0.9rem;
+            }
+            
+            .features ul {
+                font-size: 0.8rem;
+            }
+            
+            .floating-hearts .heart {
+                font-size: 16px;
+            }
+        }
+
+        /* Landscape orientation for phones */
+        @media (max-width: 768px) and (orientation: landscape) {
+            .register-header {
+                padding: 15px;
+            }
+            
+            .register-header h1 {
+                font-size: 1.5rem;
+            }
+            
+            .register-form {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="floating-hearts">
+        <div class="heart">❤</div>
+        <div class="heart">💙</div>
+        <div class="heart">💜</div>
+        <div class="heart">💚</div>
+        <div class="heart">💛</div>
+        <div class="heart">🧡</div>
+        <div class="heart">💖</div>
+        <div class="heart">💝</div>
+        <div class="heart">💕</div>
+    </div>
+
+    <div class="register-container">
+        <div class="register-header">
+            <h1>📝 Join Us</h1>
+            <p>Create your account to access the Anonymous Confession Board</p>
+        </div>
+
+        <div class="register-form">
+            {% if messages %}
+                {% for message in messages %}
+                    {% if message.tags == 'error' %}
+                        <div class="error-message">
+                            {{ message }}
+                        </div>
+                    {% else %}
+                        <div class="success-message">
+                            {{ message }}
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+
+            <form method="post">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="email">Email Address:</label>
+                    <input type="email" id="email" name="email" class="form-input" required placeholder="your.email@example.com">
+                </div>
+                
+                <div class="form-group">
+                    <label for="password1">Password:</label>
+                    <input type="password" id="password1" name="password1" class="form-input" required placeholder="At least 6 characters">
+                </div>
+                
+                <div class="form-group">
+                    <label for="password2">Confirm Password:</label>
+                    <input type="password" id="password2" name="password2" class="form-input" required placeholder="Repeat your password">
+                </div>
+                
+                <button type="submit" class="register-btn">Create Account ✨</button>
+            </form>
+
+            <div class="features">
+                <h4>🌟 What you get:</h4>
+                <ul>
+                    <li>Access to submit anonymous confessions</li>
+                    <li>Read all confessions from the community</li>
+                    <li>Your identity stays completely private</li>
+                    <li>No personal information shared</li>
+                </ul>
+            </div>
+
+            <div class="login-link">
+                <p>Already have an account? <a href="{% url 'login' %}">Login here</a></p>
+            </div>
+        </div>
+    </div>
+</body>
+</html> 
